@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Urbex Eesti</title>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; }
+    #map { height: 100%; width: 100%; }
+    .marker-info {
+      max-width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    let map;
+    const markers = [];
+
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 58.5953, lng: 25.0136 },
+        zoom: 7,
+        mapTypeId: "hybrid"
+      });
+
+      map.addListener("click", (e) => {
+        const title = prompt("Sisesta koha nimi või kirjeldus:");
+        if (title) {
+          const marker = new google.maps.Marker({
+            position: e.latLng,
+            map: map,
+            title: title
+          });
+
+          const infoWindow = new google.maps.InfoWindow({
+            content: `<div class="marker-info"><strong>${title}</strong><br>Asukoht: ${e.latLng.toUrlValue(6)}</div>`
+          });
+
+          marker.addListener("click", () => {
+            infoWindow.open(map, marker);
+          });
+
+          markers.push(marker);
+        }
+      });
+    }
+  </script>
+
+  <!-- Asenda YOUR_API_KEY oma Google Maps API võtmega -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+  </script>
+</body>
+</html>
